@@ -9,21 +9,21 @@ public class Productor implements Runnable {
 
     public void run() {
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String linea;
-            while ((linea = reader.readLine()) != null) {
-                MemoriaCompartida.lineasLeidas.incrementAndGet();
-                String[] palabras = linea.split("\\s+");
-                synchronized (MemoriaCompartida.monitor) {
-                    for (String palabra : palabras) {
-                        if (!palabra.isEmpty()) {
-                            MemoriaCompartida.palabras.add(palabra);
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sharedMemory.linesRead.incrementAndGet();
+                String[] words = line.split("\\s+");
+                synchronized (sharedMemory.monitor) {
+                    for (String word : words) {
+                        if (!word.isEmpty()) {
+                            sharedMemory.words.add(word);
                         }
                     }
-                    MemoriaCompartida.monitor.notifyAll();
+                    sharedMemory.monitor.notifyAll();
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }                       
 }

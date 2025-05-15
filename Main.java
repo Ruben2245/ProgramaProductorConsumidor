@@ -1,25 +1,25 @@
 public class Main {
-    public static volatile boolean productorTerminado = false;
+    public static volatile boolean productorFinished = false;
 
     public static void main(String[] args) throws Exception {
         String inputPath = "entrada.txt";
         String outputPath = "salida.txt";
 
         Thread productor = new Thread(new Productor(inputPath));
-        Thread consumidor = new Thread(new Consumidor(outputPath));
-        Thread estadisticas = new Thread(new Estadisticas());
+        Thread consumer = new Thread(new Consumer(outputPath));
+        Thread stats = new Thread(new Stats());
 
         productor.start();
-        consumidor.start();
-        estadisticas.start();
+        consumer.start();
+        stats.start();
 
         productor.join();
-        productorTerminado = true;
+        productorFinished = true;
 
-        synchronized (MemoriaCompartida.monitor) {
-            MemoriaCompartida.monitor.notifyAll();
+        synchronized (sharedMemory.monitor) {
+            sharedMemory.monitor.notifyAll();
         }
 
-        consumidor.join();
+        consumer.join();
     }
 }

@@ -1,16 +1,16 @@
-public class Estadisticas implements Runnable {
+public class Stats implements Runnable {
     public void run() {
         try {
             // Se sigue ejecutando cada 10 segundos
-            while (!Main.productorTerminado || !MemoriaCompartida.palabras.isEmpty()) {
+            while (!Main.productorFinished || !sharedMemory.words.isEmpty()) {
                 Thread.sleep(10000);  // Espera 10 segundos antes de mostrar las estadísticas
 
                 // Sincronización para asegurar que no haya conflictos con otros hilos
-                synchronized (MemoriaCompartida.monitor) {
+                synchronized (sharedMemory.monitor) {
                     System.out.println("----- Estadísticas -----");
-                    System.out.println("Líneas leídas: " + MemoriaCompartida.lineasLeidas.get());
-                    System.out.println("Palabras en memoria: " + MemoriaCompartida.palabras.size());
-                    System.out.println("Palabras escritas: " + MemoriaCompartida.palabrasEscritas.get());
+                    System.out.println("Líneas leídas: " + sharedMemory.linesRead.get());
+                    System.out.println("Palabras en memoria: " + sharedMemory.words.size());
+                    System.out.println("Palabras escritas: " + sharedMemory.linesWriten.get());
                     System.out.println("------------------------");
                 }
             }
