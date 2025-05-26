@@ -12,7 +12,7 @@ public class Productor implements Runnable {
             String line;
             while ((line = reader.readLine()) != null) {
                 sharedMemory.linesRead.incrementAndGet();
-                String[] words = line.split("\\s+");
+                String words[] = line.split("\\s+");
                 synchronized (sharedMemory.monitor) {
                     for (String word : words) {
                         if (!word.isEmpty()) {

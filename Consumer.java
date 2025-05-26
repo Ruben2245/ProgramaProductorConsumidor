@@ -12,8 +12,7 @@ public class Consumer implements Runnable {
     public void run() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             while (!Main.productorFinished || !sharedMemory.words.isEmpty()) {
-                String word = null;
-
+                String word = null; 
                 synchronized (sharedMemory.monitor) {
                     while (sharedMemory.words.isEmpty() && !Main.productorFinished) {
                         sharedMemory.monitor.wait();
@@ -21,6 +20,7 @@ public class Consumer implements Runnable {
 
                     if (!sharedMemory.words.isEmpty()) {
                         word = sharedMemory.words.remove(0);
+                        sharedMemory.lastWordWritten = word;
                     }
                 }
 
@@ -29,7 +29,12 @@ public class Consumer implements Runnable {
                     writer.newLine();
                     writer.flush();
                     sharedMemory.linesWriten.incrementAndGet();
-                    Thread.sleep(10000); // Esperar 10 segundos por cada palabra
+                    
+                    synchronized (sharedMemory.monitor) {
+                        sharedMemory.monitor.notifyAll();
+                    }
+                    
+                    Thread.sleep(10000);
                 }
             }
         } catch (IOException | InterruptedException e) {
