@@ -18,21 +18,11 @@ public class Main {
         stats.start();
 
         System.out.println("Todos los hilos iniciados correctamente.");
-
-        productor.join();
-        productorFinished = true;
-        System.out.println("Productor ha terminado de leer el archivo de entrada.");
-
-        synchronized (sharedMemory.monitor) {
-            sharedMemory.monitor.notifyAll();
-        }
-
-        consumer.join();
-        System.out.println("Consumidor ha terminado de procesar todas las palabras.");
+        System.out.println("Programa ejecutándose. Agrega palabras a 'entrada.txt'");
         
-        System.out.println("\n----- RESUMEN FINAL -----");
-        System.out.println("Total de líneas leídas: " + sharedMemory.linesRead.get());
-        System.out.println("Total de palabras procesadas y escritas: " + sharedMemory.linesWriten.get());
-        System.out.println("Programa finalizado con éxito.");
+        // Mantener el programa corriendo indefinidamente
+        // Solo los hilos trabajarán automáticamente
+        productor.join();
+        consumer.join();
     }
 }

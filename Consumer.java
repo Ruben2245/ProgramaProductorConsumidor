@@ -11,10 +11,10 @@ public class Consumer implements Runnable {
 
     public void run() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            while (!Main.productorFinished || !sharedMemory.words.isEmpty()) {
+            while (true) {
                 String word = null; 
                 synchronized (sharedMemory.monitor) {
-                    while (sharedMemory.words.isEmpty() && !Main.productorFinished) {
+                    while (sharedMemory.words.isEmpty()) {
                         sharedMemory.monitor.wait();
                     }
 
